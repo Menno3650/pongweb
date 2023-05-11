@@ -20,6 +20,9 @@ body{
   background-size: 4%;
   height: 100vh;
   width: 100%;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
 }
 .section-center{
   position: absolute;
@@ -355,7 +358,14 @@ h1{
 
 
 
+footer {
+  text-align:center;
+  padding: 5px;
+  background-color: #abbaba;
+  color: #000;
+  margin-top: auto;
 
+}
 
 
 

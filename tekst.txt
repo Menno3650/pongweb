@@ -1,0 +1,151 @@
+import pygame
+import random
+
+# Constants
+SCREEN_WIDTH = 534
+SCREEN_HEIGHT = 600
+FPS = 60
+PLAYER_SIZE = 50
+PLAYER_SPEED = 5
+CAR_WIDTH = 55
+CAR_HEIGHT = 130
+CAR_SPEED = 0
+MOTO_HEIGHT = 110
+MOTO_WIGHT = 40
+
+# Colors
+BLACK = (0, 0, 0)
+WHITE = (255, 255, 255)
+
+car_images = [
+    r"C:\Users\Menno\OneDrive\Documenten\GitHub\app auto\car1.png",
+    r"C:\Users\Menno\OneDrive\Documenten\GitHub\app auto\car2.png",
+    r"C:\Users\Menno\OneDrive\Documenten\GitHub\app auto\car3.png",
+    r"C:\Users\Menno\OneDrive\Documenten\GitHub\app auto\car4.png",
+    r"C:\Users\Menno\OneDrive\Documenten\GitHub\app auto\car5.png",
+    r"C:\Users\Menno\OneDrive\Documenten\GitHub\app auto\car6.png",
+    r"C:\Users\Menno\OneDrive\Documenten\GitHub\app auto\car7.png",
+    r"C:\Users\Menno\OneDrive\Documenten\GitHub\app auto\car8.png",
+]
+
+
+
+class Player(pygame.sprite.Sprite):
+    def __init__(self):
+        super().__init__()
+        imagem = pygame.image.load(r"C:\Users\Menno\OneDrive\Documenten\GitHub\app auto\motor.png")
+        self.original_image = pygame.transform.flip(pygame.transform.scale(imagem, (MOTO_WIGHT, MOTO_HEIGHT)), True, False)
+        self.image = self.original_image
+        self.rect = self.image.get_rect()
+        self.rect.center = (SCREEN_WIDTH // 2, SCREEN_HEIGHT - PLAYER_SIZE)
+        self.rotation_angle = 0
+
+    def update(self):
+        keys = pygame.key.get_pressed()
+        if keys[pygame.K_UP]:
+            self.rect.y -= PLAYER_SPEED
+        if keys[pygame.K_DOWN]:
+            self.rect.y += PLAYER_SPEED
+        if keys[pygame.K_LEFT]:
+            self.rect.x -= PLAYER_SPEED
+            self.rotation_angle = 20  # set rotation angle to 20 degrees when moving left
+        elif keys[pygame.K_RIGHT]:
+            self.rect.x += PLAYER_SPEED
+            self.rotation_angle = -20  # set rotation angle to -20 degrees when moving right
+        else:
+            self.rotation_angle = 0  # reset rotation angle to 0 when not moving left or right
+        self.rect.clamp_ip(pygame.Rect(0, 0, SCREEN_WIDTH, SCREEN_HEIGHT))
+        self.rotate()  # call rotate method to rotate image and hitbox
+
+    def rotate(self):
+        """Rotates the motorbike image and hitbox by the current rotation angle"""
+        self.image = pygame.transform.rotate(self.original_image, self.rotation_angle)
+        self.rect = self.image.get_rect(center=self.rect.center)
+
+class Car(pygame.sprite.Sprite):
+    def __init__(self, y, car_images):
+        super().__init__()
+        imagec = pygame.image.load(random.choice(car_images))
+        imagec = pygame.transform.flip(pygame.transform.scale(imagec, (CAR_WIDTH, CAR_HEIGHT)), True, False)
+        self.image = pygame.transform.rotate(imagec,180)
+        self.car_images = car_images
+        self.rect = self.image.get_rect()
+        self.rect.center = (random.choice([74, 199, 331, 458]), y)
+        while pygame.sprite.spritecollide(self, cars, False):
+            self.rect.center = (random.choice([74, 199, 331, 458]), y)
+        self.speed = random.randint(2, 7)
+        self.width, self.height = self.image.get_size()
+
+    
+
+
+    def update(self):
+        self.rect.y += self.speed
+        if self.rect.top > SCREEN_HEIGHT:
+            self.kill()
+            x = random.randint(0, SCREEN_WIDTH - self.width)
+            y = random.randint(-SCREEN_HEIGHT, -self.height)
+            car = Car(y, self.car_images)
+            all_sprites.add(car)
+            cars.add(car)
+
+        # Check for collisions with other cars and adjust position if necessary
+        for car in cars:
+            if car == self:
+                continue
+            if pygame.sprite.collide_rect(self, car):
+                if self.rect.top < car.rect.bottom and self.speed > 0:
+                    self.rect.bottom = car.rect.top - 10  # Add a little bit of space
+                    self.speed = car.speed
+                elif self.rect.bottom > car.rect.top and self.speed < 0:
+                    self.rect.top = car.rect.bottom + 10  # Add a little bit of space
+                    self.speed = car.speed
+
+
+
+
+
+
+pygame.init()
+screen = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
+clock = pygame.time.Clock()
+
+all_sprites = pygame.sprite.Group()
+cars = pygame.sprite.Group()
+
+player = Player()
+all_sprites.add(player)
+
+road_image = pygame.image.load(r"C:\Users\Menno\OneDrive\Documenten\GitHub\6IICT_PROG4_oef\hfst_6_oop\oefenmee\road.png").convert()
+
+
+
+for i in range(0, 5, 2):
+    car1 = Car(-i * 200, car_images)
+    all_sprites.add(car1)
+    cars.add(car1)
+    car2 = Car(-i * 200 - 100, car_images)
+    all_sprites.add(car2)
+    cars.add(car2)
+
+
+running = True
+while running:
+    # x, y = pygame.mouse.get_pos()
+    # print(x,y)
+    for event in pygame.event.get():
+        if event.type == pygame.QUIT:
+            running = False
+
+    all_sprites.update()
+
+    # Check collision between player and cars
+    if pygame.sprite.spritecollide(player, cars, False):
+        running = False
+
+    screen.blit(road_image, (0, 0))
+    all_sprites.draw(screen)
+    pygame.display.flip()
+    clock.tick(FPS)
+
+pygame.quit()

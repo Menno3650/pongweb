@@ -20,6 +20,9 @@ body{
   background-size: 4%;
   height: 100%;
   width: 100%;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
 }
 
 
@@ -304,13 +307,14 @@ h1{
 .tekstvak{
     background-color: lightgrey;
     width: 400px;
-    border: 15px solid rgba(191, 199, 78, 0.63);
+    border: 15px solid #49acc5;
     padding: 20px;
     margin-top: 570px;
     margin-left: 31%;
     color:rgb(0, 0, 0);
     border-radius: 20px;
     text-align: center;
+    margin-bottom: 30px;
 }
 
 
@@ -370,7 +374,14 @@ h1{
 }
 
 
+footer {
+  text-align:center;
+  padding: 5px;
+  background-color: #abbaba;
+  color: #000;
+  margin-top: 1px;
 
+}
 
 
 
