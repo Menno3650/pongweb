@@ -25,16 +25,17 @@ body{
 }
   
 .section-center{
-  position: absolute;
-  top: 50%;
-  left: 0;
+  position: center;
+  top: 700%;
+  left: 50%;
   display: block;
   width: 100%;
   padding: 0;
   margin: 0;
   z-index: 6;
   text-align: center;
-  transform: translateY(-50%);
+  margin-top: 10%;
+  margin-left: 0%;
 }
 h1{
   font-family: 'Montserrat', sans-serif;
@@ -369,7 +370,7 @@ footer {
 
 .tiltle1{
   text-align: center;
-  margin-top: 2px;
+  margin-top: 1px;
   font-size: 30px;
   font-weight: bold;
   font-family: 'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
@@ -377,27 +378,33 @@ footer {
 
 .tekstvak{
 	background-color: lightgrey;
-	width: 700px;
+	width: 40%;
 	border: 15px solid #49acc5;
-	padding: 20px;
-	margin-top: 450px;
-	margin-left: 19%;
+	padding: 50px;
+	margin-top: 10%;
+	margin-left: 25%;
+	color:rgb(0, 0, 0);
+	border-radius: 20px;
+	text-align: center;
+  margin-bottom: 3%;
+
+}
+.tekstvak1{
+	background-color: lightgrey;
+	width: 40%;
+	border: 15px solid #49acc5;
+	padding: 50px;
+	margin-top: 50px;
+	margin-left: 25%;
 	color:rgb(0, 0, 0);
 	border-radius: 20px;
 	text-align: center;
   margin-bottom: 30px;
 }
-.tekstvak1{
-	background-color: lightgrey;
-	width: 700px;
-	border: 15px solid #49acc5;
-	padding: 20px;
-	margin-top: 50px;
-	margin-left: 19%;
-	color:rgb(0, 0, 0);
-	border-radius: 20px;
-	text-align: center;
-  margin-bottom: 30px;
+
+.code{
+  height: 390px;
+  width: 80%;
 }
 
 

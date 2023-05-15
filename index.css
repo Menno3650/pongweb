@@ -43,16 +43,17 @@ body{
 }
 
 .section-center{
-  position: absolute;
-  top: 50%;
-  left: 0;
+  position: center;
+  top: 700%;
+  left: 50%;
   display: block;
   width: 100%;
   padding: 0;
   margin: 0;
   z-index: 6;
   text-align: center;
-  transform: translateY(-50%);
+  margin-top: 10%;
+  margin-left: 0%;
 }
 h1{
   font-family: 'Montserrat', sans-serif;
