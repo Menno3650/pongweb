@@ -1,13 +1,12 @@
 <!DOCTYPE html>
 <html>
-<head>
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <link rel="stylesheet" href="contact.css">
-    
-</head>
+	<head>
+		<meta name="viewport" content="width=device-width, initial-scale=1">
+		<link rel="stylesheet" href="contact.css">
+	</head>
 <body> 
     <a href="index.html" class="logo" target="_self">
-		<img src="https://www.coolgenerator.com/Data/Textlogo/202305/bb1e3562c1934fb4e6cd5dd09d9f4d6e.png" alt="pong.html">
+		<img src="pong.png" alt="pong.html">
 	</a>
 	<div class="pong-loader"></div>
   	<input class="menu-icon" type="checkbox" id="menu-icon" name="menu-icon"/>
@@ -25,7 +24,20 @@
   		<h1 class="mb-0">Contact</h1>
 		<hr>
   	</div>
-	  
+	  </div>
+	  <div class="formcarry-container">
+		<form action="form-process.php" method="POST" class="formcarry-form">
+		  <input type="text" id="name" name="fullName" required />
+  
+		  <label for="email">Your Email Address</label>
+		  <input type="email" id="email" name="email" required />
+  
+		  <label for="message">Your Message</label>
+		  <textarea name="message" id="message" cols="30" rows="10"></textarea>
+  
+		  <button type="submit">Send</button>
+		</form>
+	  </div>
 	
     <footer> <small>Pong door Adam Ariss en Menno Heussen @2023</small></footer>
   </body>
