@@ -1,64 +1,114 @@
 <!DOCTYPE html>
 <html>
+
 <head>
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <link rel="stylesheet" href="project.css">
-    
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<link rel="stylesheet" href="project.css">
+
 </head>
-<body> 
-    <a href="index.html" class="logo" target="_self">
+
+<body>
+	<a href="index.html" class="logo" target="_self">
 		<img src="pong.png" alt="pong.html">
 	</a>
 	<div class="pong-loader"></div>
-  	<input class="menu-icon" type="checkbox" id="menu-icon" name="menu-icon"/>
-  	<label for="menu-icon"></label>
-  	<nav class="nav"> 		
-  		<ul class="pt-5">
-  			<li><a href="overons.html">Over ons</a></li>
-  			<li><a href="Project.html">Project</a></li>
-  			<li><a href="https://blog-menno-adam.netlify.app/">Blog</a></li>
-  			<li><a href="mail.html">Contact</a></li>
-  		</ul>
-  	</nav>
+	<input class="menu-icon" type="checkbox" id="menu-icon" name="menu-icon" />
+	<label for="menu-icon"></label>
+	<nav class="nav">
+		<ul class="pt-5">
+			<li><a href="overons.html">Over ons</a></li>
+			<li><a href="Project.html">Project</a></li>
+			<li><a href="https://blog-menno-adam.netlify.app/">Blog</a></li>
+			<li><a href="mail.html">Contact</a></li>
+		</ul>
+	</nav>
 
-  	<div class="section-center">
-  		<h1 class="mb-0">Project</h1>
-		  <hr>
-  	</div>
+	<div class="section-center">
+		<h1 class="mb-0">Project</h1>
+		<hr>
+	</div>
 
-	<div class ="tekstvak">
+	<div class="tekstvak">
 		<p class="tiltle1">De code</p>
-        <div><object class="code" data="tekst.txt" ></object></div>
+		<div><object class="code" data="tekst.txt"></object></div>
 	</div>
-	<div class ="tekstvak1">
+	<div class="tekstvak1">
 		<p class="tiltle1">Raspberry PI 3 B+</p>
-		<img src="rpi.png" width="80%" >
-        <p>De Raspberry Pi 3 B+ is een super minicomputer. De minicomputer is ongeveer zo groot als een creditcard. Alles kan met de Raspberry Pi. Van je eigen programma’s maken tot video’s afspelen en van presentaties maken tot games spelen. Deze gebruiken we voor ons project.</p>
+		<img src="rpi.png" width="80%">
+		<p>De Raspberry Pi 3 B+ is een super minicomputer. De minicomputer is ongeveer zo groot als een creditcard.
+			Alles kan met de Raspberry Pi. Van je eigen programma’s maken tot video’s afspelen en van presentaties maken
+			tot games spelen. Deze gebruiken we voor ons project.</p>
 	</div>
-	<div class ="tekstvak1">
+	<div class="tekstvak1">
 		<p class="tiltle1">Knoppen</p>
-		<img src="knop.jpg" width="330" >
-		<img src="knoplicht.jpg" width="330" >
-        <p>Hier boven ziet u de knoppen die wij gebruiken voor het omhoog en omlaag gaan van de paddles in het spel. De knoppen zijn aangesloten m.b.v een pull up weerstand zodat deze naar de GND en naar de spi ingang moet gaan. De spi ingang is een synchrone seriële datalink tussen ten minste twee mediums. Er is in eerste instantie sprake van één master en één slave. Deze zit op GPIO pin 10.</p>
+		<img src="knop.jpg" width="330">
+		<img src="knoplicht.jpg" width="330">
+		<p>Hier boven ziet u de knoppen die wij gebruiken voor het omhoog en omlaag gaan van de paddles in het spel. De
+			knoppen zijn aangesloten m.b.v een pull up weerstand zodat deze naar de GND en naar de spi ingang moet gaan.
+			De spi ingang is een synchrone seriële datalink tussen ten minste twee mediums. Er is in eerste instantie
+			sprake van één master en één slave. Deze zit op GPIO pin 10.</p>
 	</div>
-	<div class ="tekstvak1">
+	<div class="tekstvak1">
 		<p class="tiltle1">Connectoren</p>
-		<img src="con.png" width="330" >
-		<img src="https://cdn.webshopapp.com/shops/304271/files/332130681/1200x930x3/chassis-connector-8-polig-incl-stekker-set.jpg" width="330" >
-        <p>Hier boven ziet u een 8-pins DIN-connector die we gebruiken om de kabel van de knoppen naar de raspberry pi te brengen. De connector is een ronde connector met acht pinnen die elektrische verbindingen mogelijk maakt tussen verschillende apparaten, meestal gebruikt in audiotoepassingen. Elke pin heeft een specifieke functie en maakt verbinding met een bijpassende pin in een andere connector om elektrische signalen over te brengen.</p>
+		<img src="con.png" width="330">
+		<img src="https://cdn.webshopapp.com/shops/304271/files/332130681/1200x930x3/chassis-connector-8-polig-incl-stekker-set.jpg"
+			width="330">
+		<p>Hier boven ziet u een 8-pins DIN-connector die we gebruiken om de kabel van de knoppen naar de raspberry pi
+			te brengen. De connector is een ronde connector met acht pinnen die elektrische verbindingen mogelijk maakt
+			tussen verschillende apparaten, meestal gebruikt in audiotoepassingen. Elke pin heeft een specifieke functie
+			en maakt verbinding met een bijpassende pin in een andere connector om elektrische signalen over te brengen.
+		</p>
 	</div>
-	<div class ="tekstvak1">
+	<div class="tekstvak1">
 		<p class="tiltle1">Python</p>
-		<img src="python-coding-mistakes.jpg" width="500px" >
-        <p>
-			Python is een veelzijdige programmeertaal die bekend staat om zijn eenvoudige en leesbare syntaxis. Het heeft een grote standaardbibliotheek en wordt veel gebruikt voor webontwikkeling, gegevensanalyse, AI en machine learning. Wij gebruiken python voor het ontwerpen van onze pong code. Dit doen we met de module pygame die het voor ons makkelijker maakt om een spel te maken.</p>
+		<img src="python-coding-mistakes.jpg" width="500px">
+		<p>
+			Python is een veelzijdige programmeertaal die bekend staat om zijn eenvoudige en leesbare syntaxis. Het
+			heeft een grote standaardbibliotheek en wordt veel gebruikt voor webontwikkeling, gegevensanalyse, AI en
+			machine learning. Wij gebruiken python voor het ontwerpen van onze pong code. Dit doen we met de module
+			pygame die het voor ons makkelijker maakt om een spel te maken.</p>
 	</div>
-	<footer>Pong door Adam Ariss en Menno Heussen @2023</footer>
-	<!-- Back to top button -->
-	
-	
-  </body>
+	<div class="tekstvak1">
+		<p class="tiltle1">Python</p>
+		<img class="zoom" src="gant.png" width="500px">
+		<p>
+			GanttProject is projectmanagementsoftware voor het plannen, organiseren en beheren van projecten. Het biedt
+			een visuele weergave van taken, tijdlijnen en resources, en genereert Gantt-diagrammen. Wij hebben dit
+			gebruikt voor het plannen van ons project om te zien wat wij wanneer hebben gedaan.hierboven kunt u dit
+			zien.
+	</div>
+	<div class="tekstvak1">
+		<p class="tiltle1">Python</p>
+		<div class="embla">
+			<div class="embla__container">
+				<div class="embla__slide"><img src="EaglePongeindprojectBODEM.png" height="500px" alt="knop"></div>
+				<div class="embla__slide"><img src="EaglePongeindprojectDRILLS.png" height="500px" alt="knop"></div>
+				<div class="embla__slide"><img src="EaglePongeindprojectTOP.png" height="500px" alt="knop"></div>
+				<div class="embla__slide"><img src="c9babf92_1.png" height="500px" alt="knop"></div>
+			</div>
+		</div>
+		<p>Eagle is software voor het ontwerpen van printplaten (PCB's). Het heeft een gebruiksvriendelijke interface
+			en krachtige tools om circuits te tekenen, componenten te plaatsen, sporen te routeren en het ontwerp te
+			verifiëren. Hierboven ziet u onze eagle tekening.</p>
+	</div>
 
-	
+	<script src="https://unpkg.com/embla-carousel/embla-carousel.umd.js"></script>
+	<script src="https://unpkg.com/embla-carousel-autoplay/embla-carousel-autoplay.umd.js"></script>
+
+	<script type="text/javascript">
+		var emblaNode = document.querySelector('.embla')
+		var options = { loop: false }
+		var plugins = [EmblaCarouselAutoplay()] // Plugins
+
+		var embla = EmblaCarousel(emblaNode, options, plugins)
+	</script>
+
+
+	<footer>Pong door Adam Ariss en Menno Heussen @2023</footer>
+
+
+</body>
+
+
 
 </html>

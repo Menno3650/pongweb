@@ -1,151 +1,550 @@
 import pygame
-import random
+import RPi.GPIO as GPIO
+import time
+import pygame_menu
+from pygame_menu.examples import create_example_window
+from typing import Tuple, Any
+import board
+import neopixel_spi as neopixel
 
-# Constants
-SCREEN_WIDTH = 534
-SCREEN_HEIGHT = 600
-FPS = 60
-PLAYER_SIZE = 50
-PLAYER_SPEED = 5
-CAR_WIDTH = 55
-CAR_HEIGHT = 130
-CAR_SPEED = 0
-MOTO_HEIGHT = 110
-MOTO_WIGHT = 40
+NUM_PIXELS = 64
+PIXEL_ORDER = neopixel.GRB
+COLORS1 = 0xff1493
+COLORS2 = 0x1eec10
+DELAY = 5
 
-# Colors
-BLACK = (0, 0, 0)
-WHITE = (255, 255, 255)
+colorbutton = 0x0000ff
+colorbutton1 = 0x0000ff
 
-car_images = [
-    r"C:\Users\Menno\OneDrive\Documenten\GitHub\app auto\car1.png",
-    r"C:\Users\Menno\OneDrive\Documenten\GitHub\app auto\car2.png",
-    r"C:\Users\Menno\OneDrive\Documenten\GitHub\app auto\car3.png",
-    r"C:\Users\Menno\OneDrive\Documenten\GitHub\app auto\car4.png",
-    r"C:\Users\Menno\OneDrive\Documenten\GitHub\app auto\car5.png",
-    r"C:\Users\Menno\OneDrive\Documenten\GitHub\app auto\car6.png",
-    r"C:\Users\Menno\OneDrive\Documenten\GitHub\app auto\car7.png",
-    r"C:\Users\Menno\OneDrive\Documenten\GitHub\app auto\car8.png",
-]
+spi = board.SPI()
 
+pixels = neopixel.NeoPixel_SPI(spi,
+                               NUM_PIXELS,
+                               pixel_order=PIXEL_ORDER,
+                               auto_write=False)
 
+GPIO.setmode(GPIO.BCM)
+button1 = GPIO.setup(21, GPIO.IN, pull_up_down=GPIO.PUD_UP) #button is aangesloten op pin 1 en is een pull_down weerstand
+button2 = GPIO.setup(20, GPIO.IN, pull_up_down=GPIO.PUD_UP) #button is aangesloten op pin 1 en is een pull_down weerstand
+button3 = GPIO.setup(27, GPIO.IN, pull_up_down=GPIO.PUD_UP) #button is aangesloten op pin 1 en is een pull_down weerstand
+button4 = GPIO.setup(17, GPIO.IN, pull_up_down=GPIO.PUD_UP) #button is aangesloten op pin 1 en is een pull_down weerstand
 
-class Player(pygame.sprite.Sprite):
-    def __init__(self):
-        super().__init__()
-        imagem = pygame.image.load(r"C:\Users\Menno\OneDrive\Documenten\GitHub\app auto\motor.png")
-        self.original_image = pygame.transform.flip(pygame.transform.scale(imagem, (MOTO_WIGHT, MOTO_HEIGHT)), True, False)
-        self.image = self.original_image
-        self.rect = self.image.get_rect()
-        self.rect.center = (SCREEN_WIDTH // 2, SCREEN_HEIGHT - PLAYER_SIZE)
-        self.rotation_angle = 0
+WIDTHM=600
+HEIGHTM=500
+surface = create_example_window('Pong keuzemenu', (WIDTHM, WIDTHM), flags = pygame.FULLSCREEN)
+col = (0, 0, 255)
+col1 = (0, 0, 255)
+snelheid = 3
+winscoremenu = 1
+winscore = 1
+kleurzin = "BLAUWE"
+kleurzin1 = "BLAUWE"
+def set_difficulty(selected: Tuple, value: 1) -> None:
+    """
+    Set the difficulty of the game.
+    """
+    print(f'Snelheid {selected} ({value})')
+    global snelheid
+    if value == 1:
+        snelheid = 3
+        return snelheid
+    if value == 2:
+        snelheid = 5
+        return snelheid
+    if value == 3:
+        snelheid = 8
+        return snelheid
+    start_the_game(snelheid)
 
-    def update(self):
-        keys = pygame.key.get_pressed()
-        if keys[pygame.K_UP]:
-            self.rect.y -= PLAYER_SPEED
-        if keys[pygame.K_DOWN]:
-            self.rect.y += PLAYER_SPEED
-        if keys[pygame.K_LEFT]:
-            self.rect.x -= PLAYER_SPEED
-            self.rotation_angle = 20  # set rotation angle to 20 degrees when moving left
-        elif keys[pygame.K_RIGHT]:
-            self.rect.x += PLAYER_SPEED
-            self.rotation_angle = -20  # set rotation angle to -20 degrees when moving right
-        else:
-            self.rotation_angle = 0  # reset rotation angle to 0 when not moving left or right
-        self.rect.clamp_ip(pygame.Rect(0, 0, SCREEN_WIDTH, SCREEN_HEIGHT))
-        self.rotate()  # call rotate method to rotate image and hitbox
+def set_color(selected: Tuple, value: Any) -> None:
+    global col
+    global colorbutton
+    global kleurzin
+    print(f'Kleur {selected} ({value})')
+    col = selected
+    print(value)
+    
+    if value == 1:
+        col = (0, 0, 255)
+        colorbutton = 0x0000ff
+        kleurzin = "BLAUWE"
+    if value == 2:
+        col = (255, 0, 0)
+        colorbutton = 0xff0000
+        kleurzin = "RODE"
+    if value == 3:
+        col = (0, 255, 0)
+        colorbutton = 0x008000
+        kleurzin = "GROENE"
+    if value == 4:
+        col = (229, 190, 1)
+        colorbutton = 0x737000
+        kleurzin = "GELE"
+    
+    
+def set_color1(selected: Tuple, value: Any) -> None:
+    global col1
+    global colorbutton1
+    global kleurzin1
+    print(f'Kleur {selected} ({value})')
+    col1 = selected
+    print(value)
+    
+    if value == 1:
+        col1 = (0, 0, 255)
+        colorbutton1 = 0x0000ff
+        kleurzin1 = "BLAUWE"
+    if value == 2:
+        col1 = (255, 0, 0)
+        colorbutton1 = 0xff0000
+        kleurzin1 = "RODE"
+    if value == 3:
+        col1 = (0, 255, 0)
+        colorbutton1 = 0x008000
+        kleurzin1 = "GROENE"
+    if value == 4:
+        col1 = (229, 190, 1)
+        colorbutton1 = 0x737000
+        kleurzin1 = "GELE"
+        
 
-    def rotate(self):
-        """Rotates the motorbike image and hitbox by the current rotation angle"""
-        self.image = pygame.transform.rotate(self.original_image, self.rotation_angle)
-        self.rect = self.image.get_rect(center=self.rect.center)
+    
+def scorewinnen(selected: Tuple, value: 1) -> None:
+    global winscore
+    winscore = value
+    
+def start_the_game() -> None:
+    global col
+    global colorbutton
+    global col1
+    global colorbutton1
+    global snelheid
+    global winscore
+    pygame.init()
+    WIDTH=600
+    HEIGHT=500
+    WIN = pygame.display.set_mode((WIDTH, HEIGHT), pygame.FULLSCREEN) 
+    pygame.display.set_caption("Pong")
 
-class Car(pygame.sprite.Sprite):
-    def __init__(self, y, car_images):
-        super().__init__()
-        imagec = pygame.image.load(random.choice(car_images))
-        imagec = pygame.transform.flip(pygame.transform.scale(imagec, (CAR_WIDTH, CAR_HEIGHT)), True, False)
-        self.image = pygame.transform.rotate(imagec,180)
-        self.car_images = car_images
-        self.rect = self.image.get_rect()
-        self.rect.center = (random.choice([74, 199, 331, 458]), y)
-        while pygame.sprite.spritecollide(self, cars, False):
-            self.rect.center = (random.choice([74, 199, 331, 458]), y)
-        self.speed = random.randint(2, 7)
-        self.width, self.height = self.image.get_size()
+    FPS = 60
+
+    winner = False
+
+    WHITE = (255, 255, 255)
+    BLACK = (0, 0, 0)
+    ROOD = (255, 0, 0)
+    GROEN = (0, 255, 0)
+    BLAUW = (0, 0, 255)
+    GEEL = (229, 190, 1)
+
+    kleur1 = col
+    kleur2 = col1
+    print(col)
+    
+    lijst = [3,2,1]
+
+    font = pygame.font.SysFont('Consolas', 30)
+    fontcount = pygame.font.SysFont('Consolas', 300)
+    count = fontcount.render(str( ), True, BLACK)
+    count_pos =count.get_rect()
+    count_pos.center = ((WIDTH//2)-75, HEIGHT//2)
+
+    PADDLE_WIDTH, PADDLE_HEIGHT = 7, 60
+    BALL_RADIUS = 8
+
+    SCORE_FONT = pygame.font.SysFont("comicsans", 65)
+    SCORE_FONT1 = pygame.font.SysFont("comicsans", 65)
+    SCORE_FONT2 = pygame.font.SysFont("comicsans", 35)
+    
+    WINNING_SCORE = winscore
+    def text_objects(msg, smallText):
+        textSurface = font.render(msg, True, GROEN)
+        return textSurface, textSurface.get_rect()
+
+    def licht_uit():
+        kleuropnieuw = 0x000000
+        for i in range(32):
+            pixels[i] = kleuropnieuw
+            pixels.show()
+        for i in range(32,64):
+            pixels[i] = kleuropnieuw
+            pixels.show()
+            
+            
+            
+    
+    try:
+        for i in range(32):
+            pixels[i] = colorbutton
+            pixels.show()
+        for i in range(32,64):
+            pixels[i] = colorbutton1
+            pixels.show()
+    except KeyboardInterrupt:
+        pixels.fill()
 
     
 
 
-    def update(self):
-        self.rect.y += self.speed
-        if self.rect.top > SCREEN_HEIGHT:
-            self.kill()
-            x = random.randint(0, SCREEN_WIDTH - self.width)
-            y = random.randint(-SCREEN_HEIGHT, -self.height)
-            car = Car(y, self.car_images)
-            all_sprites.add(car)
-            cars.add(car)
 
-        # Check for collisions with other cars and adjust position if necessary
-        for car in cars:
-            if car == self:
+    
+    class Paddle:
+        COLOR = kleur1
+        VEL = snelheid
+
+        def __init__(self, x, y, width, height, kleur):
+            self.x = self.original_x = x
+            self.y = self.original_y = y
+            self.width = width
+            self.height = height
+            self.kleur = kleur
+
+        def draw(self, win):
+            pygame.draw.rect(win, self.kleur, (self.x, self.y, self.width, self.height),0 )
+
+        def move(self, up=True):
+            if up:
+                self.y -= self.VEL
+            else:
+                self.y += self.VEL
+
+        def reset(self):
+            self.x = self.original_x
+            self.y = self.original_y
+
+
+
+    class Ball:
+        MAX_VEL = snelheid
+        COLOR = kleur1
+        
+        
+        def __init__(self, x, y, radius):
+            self.x = self.original_x = x
+            self.y = self.original_y = y
+            self.radius = radius
+            self.x_vel = self.MAX_VEL
+            self.y_vel = 0
+
+        def draw(self, win):
+            pygame.draw.circle(win, BLACK, (int(self.x),int(self.y)), self.radius)
+
+        def move(self):
+            self.x += self.x_vel
+            self.y += self.y_vel
+
+        def reset(self):
+            self.x = self.original_x
+            self.y = self.original_y
+            self.y_vel = 0
+            self.x_vel *= -1
+        
+    def draw(win, paddles, ball, left_score, right_score, dimknoppauze, WIN):
+        win.fill(WHITE)
+
+        left_score_text = SCORE_FONT1.render(f"{left_score}", 1, BLACK)
+        right_score_text = SCORE_FONT1.render(f"{right_score}", 1, BLACK)
+        win.blit(left_score_text, (WIDTH//4 - left_score_text.get_width()//2, 20))
+        win.blit(right_score_text, (int(WIDTH * (3/4) - right_score_text.get_width()//2), 20))
+
+        for paddle in paddles:
+            paddle.draw(win)
+
+        for i in range(10, HEIGHT, HEIGHT//20):
+            if i % 2 == 1:
                 continue
-            if pygame.sprite.collide_rect(self, car):
-                if self.rect.top < car.rect.bottom and self.speed > 0:
-                    self.rect.bottom = car.rect.top - 10  # Add a little bit of space
-                    self.speed = car.speed
-                elif self.rect.bottom > car.rect.top and self.speed < 0:
-                    self.rect.top = car.rect.bottom + 10  # Add a little bit of space
-                    self.speed = car.speed
+            pygame.draw.rect(win, BLACK, (WIDTH//2 - 5, i, 10, HEIGHT//20))
+
+        ball.draw(win)
+        pygame.draw.rect(WIN,BLACK,dimknoppauze)
+        tekst = font.render("PAUZE", True, (255, 255, 255))  # Maak de tekst
+        scherm_midden = (WIDTH // 2, (dimknoppauze[1] + (dimknoppauze[3] // 2)))
+        tekst_midden = (tekst.get_width() // 2, tekst.get_height() // 2)
+        WIN.blit(tekst, (scherm_midden[0] - tekst_midden[0], scherm_midden[1] - tekst_midden[1]))
+        pygame.display.update()
 
 
+    def handle_collision(ball, left_paddle, right_paddle):
+        if ball.y + ball.radius >= HEIGHT:
+            ball.y_vel *= -1
+        elif ball.y - ball.radius <= 0:
+            ball.y_vel *= -1
+
+        if ball.x_vel < 0:
+            if ball.y >= left_paddle.y and ball.y <= left_paddle.y + left_paddle.height:
+                if ball.x - ball.radius <= left_paddle.x + left_paddle.width:
+                    ball.x_vel *= -1
+
+                    middle_y = left_paddle.y + left_paddle.height / 2
+                    difference_in_y = middle_y - ball.y
+                    reduction_factor = (left_paddle.height / 2) / ball.MAX_VEL
+                    y_vel = difference_in_y / reduction_factor
+                    ball.y_vel = -1 * y_vel
+
+        else:
+            if ball.y >= right_paddle.y and ball.y <= right_paddle.y + right_paddle.height:
+                if ball.x + ball.radius >= right_paddle.x:
+                    ball.x_vel *= -1
+
+                    middle_y = right_paddle.y + right_paddle.height / 2
+                    difference_in_y = middle_y - ball.y
+                    reduction_factor = (right_paddle.height / 2) / ball.MAX_VEL
+                    y_vel = difference_in_y / reduction_factor
+                    ball.y_vel = -1 * y_vel
 
 
+    def handle_paddle_movement(keys, left_paddle, right_paddle):
+        if keys[pygame.K_s] and left_paddle.y - left_paddle.VEL >= 0:
+            left_paddle.move(up=True)
+        if keys[pygame.K_w] and left_paddle.y + left_paddle.VEL + left_paddle.height <= HEIGHT:
+            left_paddle.move(up=False)
+            
+        if GPIO.input(21)==False and left_paddle.y - left_paddle.VEL >= 0:
+            left_paddle.move(up=True)
+        if GPIO.input(20)==False and left_paddle.y + left_paddle.VEL + left_paddle.height <= HEIGHT:
+            left_paddle.move(up=False)
 
+        if GPIO.input(27)==False and right_paddle.y - right_paddle.VEL >= 0:
+            right_paddle.move(up=True)
+        if GPIO.input(17)==False and right_paddle.y + right_paddle.VEL + right_paddle.height <= HEIGHT:
+            right_paddle.move(up=False)
+            
+        if keys[pygame.K_UP] and right_paddle.y - right_paddle.VEL >= 0:
+            right_paddle.move(up=True)
+        if keys[pygame.K_DOWN] and right_paddle.y + right_paddle.VEL + right_paddle.height <= HEIGHT:
+            right_paddle.move(up=False)
 
-pygame.init()
-screen = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
-clock = pygame.time.Clock()
+    def countdown(WIN):
+        keys = pygame.key.get_pressed()
+        for i in lijst:
+            for event in pygame.event.get():
+                    if event.type == pygame.KEYDOWN:
+                        if event.key == pygame.K_q:
+                            licht_uit()
+                            exit()
+            count = fontcount.render(str(i), True, BLACK)
+            WIN.fill(WHITE)
+            WIN.blit(count, count_pos)
+            pygame.display.update()
+            time.sleep(1)
+        return True
+            
+    
+    
+    def pauzescherm():
+        paused = True
+        while paused:
+            dimknopresume = (225,350,150,50)
+            dimknopquit = (225,275,150,50)
+            dimknopherstart = (225,200,150,50)
+            for event in pygame.event.get():
+                if pygame.mouse.get_pressed() == (1,0,0):
+                    pos = pygame.mouse.get_pos()
+                    if dimknopresume[0] < pos[0] < (dimknopresume[0] + dimknopresume[2]):
+                        if dimknopresume[1] < pos[1] < (dimknopresume[1] + dimknopresume[3]):
+                            paused = False
+                if pygame.mouse.get_pressed() == (1,0,0):
+                    pos = pygame.mouse.get_pos()
+                    if dimknopquit[0] < pos[0] < (dimknopquit[0] + dimknopquit[2]):
+                        if dimknopquit[1] < pos[1] < (dimknopquit[1] + dimknopquit[3]):
+                            licht_uit()
+                            exit()
+                if pygame.mouse.get_pressed() == (1,0,0):
+                    pos = pygame.mouse.get_pos()
+                    if dimknopherstart[0] < pos[0] < (dimknopherstart[0] + dimknopherstart[2]):
+                        if dimknopherstart[1] < pos[1] < (dimknopherstart[1] + dimknopherstart[3]):
+                            licht_uit()
+                            menu.mainloop(surface)
+                
+           
+            WIN.fill((255, 255, 255))  # Maak het scherm wit
+            tekst = font.render("PAUZE", True, (0, 0, 0))  # Maak de tekst
+            scherm_midden = (WIDTH // 2, 100)
+            tekst_midden = (tekst.get_width() // 2, tekst.get_height() // 2)
+            WIN.blit(tekst, (scherm_midden[0] - tekst_midden[0], scherm_midden[1] - tekst_midden[1]))
+            pygame.draw.rect(WIN,BLACK,dimknopresume)
+            pygame.draw.rect(WIN,BLACK,dimknopquit)
+            pygame.draw.rect(WIN,BLACK,dimknopherstart)
+            
+            tekstresume = font.render("HERVAT", True, (255, 255, 255))  # Maak de tekst
+            scherm_midden1 = (WIDTH // 2, (dimknopresume[1] + (dimknopresume[3] // 2)))
+            tekst_midden1 = (tekstresume.get_width() // 2, tekstresume.get_height() // 2)
+            WIN.blit(tekstresume, (scherm_midden1[0] - tekst_midden1[0], scherm_midden1[1] - tekst_midden1[1]))
+            
+            tekstherstart = font.render("OPNIEUW", True, (255, 255, 255))  # Maak de tekst
+            scherm_midden3 = (WIDTH // 2, (dimknopherstart[1] + (dimknopherstart[3] // 2)))
+            tekst_midden3 = (tekstherstart.get_width() // 2, tekstherstart.get_height() // 2)
+            WIN.blit(tekstherstart, (scherm_midden3[0] - tekst_midden3[0], scherm_midden3[1] - tekst_midden3[1]))
+            
+            tekstquit = font.render("STOPPEN", True, (255, 255, 255))  # Maak de tekst
+            scherm_midden2 = (WIDTH // 2, (dimknopquit[1] + (dimknopquit[3] // 2)))
+            tekst_midden2 = (tekstquit.get_width() // 2, tekstquit.get_height() // 2)
+            WIN.blit(tekstquit, (scherm_midden2[0] - tekst_midden2[0], scherm_midden2[1] - tekst_midden2[1]))
+            pygame.display.update()
+        return True
 
-all_sprites = pygame.sprite.Group()
-cars = pygame.sprite.Group()
+    def main():
+        print(f"de snelhied is {snelheid}")
+        run = True
+        clock = pygame.time.Clock()
+        
+        left_paddle = Paddle(10, HEIGHT//2 - PADDLE_HEIGHT //
+                            2, PADDLE_WIDTH, PADDLE_HEIGHT, col)
+        right_paddle = Paddle(WIDTH - 10 - PADDLE_WIDTH, HEIGHT //
+                            2 - PADDLE_HEIGHT//2, PADDLE_WIDTH, PADDLE_HEIGHT, col1)
+        ball = Ball(WIDTH // 2, HEIGHT // 2, BALL_RADIUS)
 
-player = Player()
-all_sprites.add(player)
+            
 
-road_image = pygame.image.load(r"C:\Users\Menno\OneDrive\Documenten\GitHub\6IICT_PROG4_oef\hfst_6_oop\oefenmee\road.png").convert()
+        left_score = 0
+        right_score = 0
+        tijd = time.time()
+        winner = False
+        for i in lijst:
+            count = fontcount.render(str(i), True, BLACK)
+            WIN.fill(WHITE)
+            WIN.blit(count, count_pos)
+            pygame.display.update()
+            while tijd + 1 > time.time():
+                for event in pygame.event.get():
+                    if event.type == pygame.KEYDOWN:
+                        if event.key == pygame.K_q:
+                            run = False
+            if run == False:
+                break
+                            
+        
+            tijd = time.time()
 
+        while run:
+            
+            dimknoppauze = (250,0,100,50)
+            if pygame.mouse.get_pressed() == (1,0,0):
+                pos = pygame.mouse.get_pos()
+                if dimknoppauze[0] < pos[0] < (dimknoppauze[0] + dimknoppauze[2]):
+                    if dimknoppauze[1] < pos[1] < (dimknoppauze[1] + dimknoppauze[3]):
+                         pauzescherm()  
+            pygame.display.update()
+            interval = clock.tick(FPS)
 
+            
+            draw(WIN, [left_paddle, right_paddle], ball, left_score, right_score, dimknoppauze, WIN)
 
-for i in range(0, 5, 2):
-    car1 = Car(-i * 200, car_images)
-    all_sprites.add(car1)
-    cars.add(car1)
-    car2 = Car(-i * 200 - 100, car_images)
-    all_sprites.add(car2)
-    cars.add(car2)
+            for event in pygame.event.get():
+                if event.type == pygame.QUIT:
 
+                    run = False
+                    break
+                
 
-running = True
-while running:
-    # x, y = pygame.mouse.get_pos()
-    # print(x,y)
-    for event in pygame.event.get():
-        if event.type == pygame.QUIT:
-            running = False
+            keys = pygame.key.get_pressed()
+            handle_paddle_movement(keys, left_paddle, right_paddle)
 
-    all_sprites.update()
+            ball.move()
+            handle_collision(ball, left_paddle, right_paddle)
 
-    # Check collision between player and cars
-    if pygame.sprite.spritecollide(player, cars, False):
-        running = False
+            
 
-    screen.blit(road_image, (0, 0))
-    all_sprites.draw(screen)
-    pygame.display.flip()
-    clock.tick(FPS)
+            won = False     
+            if keys[pygame.K_q]:
+                winner = False
+                run = False 
+                
+            if ball.x < 0:
+                right_score += 1
+                if right_score >= WINNING_SCORE:
+                    won = True
+                    winner = True
+                    run = False
+                else:
+                    left_paddle.reset()
+                    right_paddle.reset()
+                    countdown(WIN)
+                    ball.reset()
+                
+                
+            elif ball.x > WIDTH:
+                left_score += 1
+                if left_score >= WINNING_SCORE:
+                    won = True
+                    winner = True
+                    run = False
+                else:
+                    left_paddle.reset()
+                    right_paddle.reset()
+                    countdown(WIN)
+                    ball.reset()
+                
+        
+        while winner==True:
+            clock.tick(FPS)
+            
+            if left_score >= WINNING_SCORE:
+                win_text = f'De {kleurzin} speler heeft gewonnen'
+                    
+                text = SCORE_FONT2.render(win_text, 1, kleur1)
+            elif right_score >= WINNING_SCORE:  
+                win_text = f'De {kleurzin1} speler heeft gewonnen'
+                    
+                text = SCORE_FONT2.render(win_text, 1, kleur2)
+                
+            WIN.fill(WHITE)
+            WIN.blit(text, (WIDTH//4 - text.get_width() //
+                            8, HEIGHT//3 - text.get_height()//8))
+         
+            dimknopherstart = (250,275,100,50)
+            dimknopquit = (250,350,100,50)
+            pygame.draw.rect(WIN,BLACK,dimknopherstart)
+            pygame.draw.rect(WIN,BLACK,dimknopquit)
+            for event in pygame.event.get():
+                if pygame.mouse.get_pressed() == (1,0,0):
+                    pos = pygame.mouse.get_pos()
+                    if dimknopherstart[0] < pos[0] < (dimknopherstart[0] + dimknopherstart[2]):
+                        if dimknopherstart[1] < pos[1] < (dimknopherstart[1] + dimknopherstart[3]):
+                            licht_uit()
+                            menu.mainloop(surface)
+                if pygame.mouse.get_pressed() == (1,0,0):
+                    pos = pygame.mouse.get_pos()
+                    if dimknopquit[0] < pos[0] < (dimknopquit[0] + dimknopquit[2]):
+                        if dimknopquit[1] < pos[1] < (dimknopquit[1] + dimknopquit[3]):
+                            licht_uit()
+                            exit()
+                            
+            tekstherstart = font.render("OPNIEUW", True, (255, 255, 255))  # Maak de tekst
+            scherm_midden3 = (WIDTH // 2, (dimknopherstart[1] + (dimknopherstart[3] // 2)))
+            tekst_midden3 = (tekstherstart.get_width() // 2, tekstherstart.get_height() // 2)
+            WIN.blit(tekstherstart, (scherm_midden3[0] - tekst_midden3[0], scherm_midden3[1] - tekst_midden3[1]))
+            tekstquit = font.render("STOPPEN", True, (255, 255, 255))  # Maak de tekst
+            scherm_midden2 = (WIDTH // 2, (dimknopquit[1] + (dimknopquit[3] // 2)))
+            tekst_midden2 = (tekstquit.get_width() // 2, tekstquit.get_height() // 2)
+            WIN.blit(tekstquit, (scherm_midden2[0] - tekst_midden2[0], scherm_midden2[1] - tekst_midden2[1]))
+            pygame.display.update()
+        licht_uit()
+        exit()
+        
+    if __name__ == '__main__':
+        main()
+        
+menu = pygame_menu.Menu(
 
-pygame.quit()
+    height=HEIGHTM,
+    theme=pygame_menu.themes.THEME_DARK,
+    title='Welkom',
+    width=WIDTHM
+)
+
+menu.add.selector('Snelheid: ', [('Traag', 1), ('Normaal', 2), ('Turbo', 3)], onchange=set_difficulty)
+menu.add.selector('KleurLinks: ', [('BLAUW', 1), ('ROOD', 2), ('GROEN', 3), ('GEEL', 4)], onchange=set_color)
+menu.add.selector('KleurRechts: ', [('BLAUW', 1), ('ROOD', 2), ('GROEN', 3), ('GEEL', 4)], onchange=set_color1)
+menu.add.selector('WinScore: ', [('1', 1), ('2', 2), ('3', 3), ('4', 4), ('5', 5), ('6', 6), ('7', 7),('8', 8),('9', 9)
+                                 ,('10', 10)], onchange=scorewinnen)
+menu.add.button('Play', (start_the_game))
+menu.add.button('Quit', pygame_menu.events.EXIT)
+
+if __name__ == '__main__':
+    menu.mainloop(surface)
+    
+
+    
+    
+
