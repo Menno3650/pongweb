@@ -1,41 +1,46 @@
 <!DOCTYPE html>
 <html>
+
 <head>
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <link rel="stylesheet" href="index.css">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<link rel="stylesheet" href="index.css">
+	<link rel="icon" type="image/x-icon" href="ponnn.ico">
 </head>
-<body> 
-    <a href="index.html" class="logo" target="_self">
+
+<body>
+	<a href="index.html" class="logo" target="_self">
 		<img src="pong.png" alt="pong.html">
 	</a>
 	<div class="pong-loader"></div>
-  	<input class="menu-icon" type="checkbox" id="menu-icon" name="menu-icon"/>
-  	<label for="menu-icon"></label>
-  	<nav class="nav"> 		
-  		<ul class="pt-5">
-  			<li><a href="overons.html">Over ons</a></li>
-  			<li><a href="Project.html">Project</a></li>
-  			<li><a href="https://blog-menno-adam.netlify.app/">Blog</a></li>
-  			<li><a href="mail.html">Contact</a></li>
-  		</ul>
-  	</nav>
+	<input class="menu-icon" type="checkbox" id="menu-icon" name="menu-icon" />
+	<label for="menu-icon"></label>
+	<nav class="nav">
+		<ul class="pt-5">
+			<li><a href="overons.html">Over ons</a></li>
+			<li><a href="Project.html">Project</a></li>
+			<li><a href="https://blog-menno-adam.netlify.app/">Blog</a></li>
+			<li><a href="mail.html">Contact</a></li>
+		</ul>
+	</nav>
 
-	
 
-  	<div class="section-center">
-  		<h1 class="mb-0">PONG</h1>
-		  <hr>
-  	</div>
 
-	<div class ="tekstvak">
+	<div class="section-center">
+		<h1 class="mb-0">PONG</h1>
+		<hr>
+	</div>
+
+	<div class="tekstvak">
 		<p class="tiltle1">Ons project Pong</p>
 		<div class="embla">
 			<div class="embla__container">
-			  <div class="embla__slide"><img src="knop.jpg" height="500px" alt="knop"></div>
-			  <div class="embla__slide"><img src="knoplicht.jpg" height="500px" alt="knop"></div>
+				<div class="embla__slide"><img src="knop.jpg" height="500px" alt="knop"></div>
+				<div class="embla__slide"><img src="knoplicht.jpg" height="500px" alt="knop"></div>
 			</div>
-		  </div>
-        <p>Wij zijn Adam en Menno. voor ons vakoverschrijdend project hebben we de opdracht gekregen om het spel Pong te maken voor meneer Baens. We moeten alleen met een paar dingen rekening houden omdat het project voor metaal en fysiek beperkte mensen is. Op deze website vinden jullie veel info over ons project.</p>
+		</div>
+		<p>Wij zijn Adam en Menno. Voor ons vakoverschrijdend project hebben we de opdracht gekregen om het spel Pong te
+			maken voor meneer Baens. We moeten alleen met een paar dingen rekening houden omdat het project voor metaal
+			en fysiek beperkte mensen is. Op deze website vinden jullie veel info over ons project.</p>
 	</div>
 	<footer>Pong door Adam Ariss en Menno Heussen @2023</footer>
 
@@ -46,9 +51,10 @@
 		var emblaNode = document.querySelector('.embla')
 		var options = { loop: false }
 		var plugins = [EmblaCarouselAutoplay()] // Plugins
-	  
-		var embla = EmblaCarousel(emblaNode, options, plugins)
-	  </script>
 
-  </body>
+		var embla = EmblaCarousel(emblaNode, options, plugins)
+	</script>
+
+</body>
+
 </html>

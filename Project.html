@@ -4,6 +4,7 @@
 <head>
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 	<link rel="stylesheet" href="project.css">
+	<link rel="icon" type="image/x-icon" href="ponnn.ico">
 
 </head>
 
@@ -44,16 +45,16 @@
 		<p class="tiltle1">Knoppen</p>
 		<img src="knop.jpg" width="330">
 		<img src="knoplicht.jpg" width="330">
-		<p>Hier boven ziet u de knoppen die wij gebruiken voor het omhoog en omlaag gaan van de paddles in het spel. De
-			knoppen zijn aangesloten m.b.v een pull up weerstand zodat deze naar de GND en naar de spi ingang moet gaan.
+		<p>Hierboven ziet u de knoppen die wij gebruiken voor het omhoog en omlaag gaan van de paddles in het spel. De
+			knoppen zijn aangesloten m.b.v een pull up weerstand zodat deze naar de GND en naar een Digitale ingang moet gaan.
 			De spi ingang is een synchrone seriële datalink tussen ten minste twee mediums. Er is in eerste instantie
-			sprake van één master en één slave. Deze zit op GPIO pin 10.</p>
+			sprake van één master en één slave. In de knoppen zit een ws2812 led ring van 16 ledjes die op de spi pin zit. Deze zit op GPIO pin 10. Deze worden aangestuurd door de neopixel module.</p>
 	</div>
 	<div class="tekstvak1">
 		<p class="tiltle1">Connectoren</p>
 		<img src="https://cdn.webshopapp.com/shops/304271/files/332130681/1200x930x3/chassis-connector-8-polig-incl-stekker-set.jpg"
 			width="330">
-		<p>Hier boven ziet u een 8-pins DIN-connector die we gebruiken om de kabel van de knoppen naar de raspberry pi
+		<p>Hierboven ziet u een 8-pins DIN-connector die we gebruiken om de kabel van de knoppen naar de raspberry pi
 			te brengen. De connector is een ronde connector met acht pinnen die elektrische verbindingen mogelijk maakt
 			tussen verschillende apparaten, meestal gebruikt in audiotoepassingen. Elke pin heeft een specifieke functie
 			en maakt verbinding met een bijpassende pin in een andere connector om elektrische signalen over te brengen.
@@ -74,17 +75,19 @@
 		<p>
 			GanttProject is projectmanagementsoftware voor het plannen, organiseren en beheren van projecten. Het biedt
 			een visuele weergave van taken, tijdlijnen en resources, en genereert Gantt-diagrammen. Wij hebben dit
-			gebruikt voor het plannen van ons project om te zien wat wij wanneer hebben gedaan.hierboven kunt u dit
+			gebruikt voor het plannen van ons project om te zien wat wij wanneer hebben gedaan. Hierboven kunt u dit
 			zien.
 	</div>
 	<div class="tekstvak1">
 		<p class="tiltle1">Eagle</p>
 		<div class="embla">
 			<div class="embla__container">
+				<div class="embla__slide"><img class="zoom" src="schemapong-1.png" height="500px" alt="knop"></div>
 				<div class="embla__slide"><img src="EaglePongeindprojectBODEM.png" height="500px" alt="knop"></div>
 				<div class="embla__slide"><img src="EaglePongeindprojectDRILLS.png" height="500px" alt="knop"></div>
 				<div class="embla__slide"><img src="EaglePongeindprojectTOP.png" height="500px" alt="knop"></div>
 				<div class="embla__slide"><img class="zoom" src="c9babf92_1.png" height="500px" alt="knop"></div>
+				<div class="embla__slide"><img class="zoom" src="schemapong-1.png" height="500px" alt="knop"></div>
 			</div>
 		</div>
 		<p>Eagle is software voor het ontwerpen van printplaten (PCB's). Het heeft een gebruiksvriendelijke interface
