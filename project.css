@@ -223,6 +223,24 @@ h1{
   text-decoration: none;
   color: #ffeba7;
 }
+
+.conta {
+  background-color: #ffeba7; /* Achtergrondkleur van de knop */
+  color: rgb(0, 0, 0); /* Tekstkleur van de knop */
+  padding: 10px 20px; /* Binnenste opvulling van de knop */
+  font-size: 30px; /* Tekstgrootte van de knop */
+  border: 6px; /* Geen rand rond de knop */
+  border-radius: 6px;
+  border-color: #000000;
+  cursor: pointer; /* Cursor verandert in een handje bij het zweven */
+  border-radius: 4px; /* Afgeronde hoeken van de knop */
+  width: 30%;
+  margin-left: 0%;
+}
+
+.conta:hover {
+  background-color: #ffeaa78f; /* Achtergrondkleur van de knop bij zweven */
+}
 .nav ul li a:after{
   display: block;
   position: absolute;
