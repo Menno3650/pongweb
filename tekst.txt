@@ -1,47 +1,48 @@
-import pygame
-import RPi.GPIO as GPIO
-import time
-import pygame_menu
-from pygame_menu.examples import create_example_window
-from typing import Tuple, Any
-import board
-import neopixel_spi as neopixel
+import pygame  # Pygame-module voor het maken van games en grafische toepassingen
+import RPi.GPIO as GPIO  # RPi.GPIO-module voor het aansturen van de GPIO-pinnen van Raspberry Pi
+import time  # Module voor het werken met tijd
+import pygame_menu  # Module voor het maken van menu's met Pygame
+from pygame_menu.examples import create_example_window  # Functie om een voorbeeldvenster te maken
+from typing import Tuple, Any  # Typing-module voor type-annotaties
+import board  # Adafruit-Blinka-module voor het werken met Raspberry Pi-pinnen
+import neopixel_spi as neopixel  # Adafruit-Blinka-module voor het aansturen van NeoPixel LED-strips via SPI
 
-NUM_PIXELS = 64
-PIXEL_ORDER = neopixel.GRB
-COLORS1 = 0xff1493
-COLORS2 = 0x1eec10
-DELAY = 5
+NUM_PIXELS = 64  # Aantal pixels op de NeoPixel LED-strip
+PIXEL_ORDER = neopixel.GRB  # Bestelvolgorde van de kleuren op de LED-strip (Groen-Rood-Blauw)
+COLORS1 = 0xff1493  # Kleur 1 (0xff1493 is roze)
+COLORS2 = 0x1eec10  # Kleur 2 (0x1eec10 is felgroen)
+DELAY = 5  # Vertraging tussen updates van de LED-strip
 
-colorbutton = 0x0000ff
-colorbutton1 = 0x0000ff
+colorbutton = 0x0000ff  # Kleur van de knop (blauw)
+colorbutton1 = 0x0000ff  # Kleur van een andere knop (blauw)
 
-spi = board.SPI()
+spi = board.SPI()  # SPI-object voor communicatie met de NeoPixel LED-strip
 
 pixels = neopixel.NeoPixel_SPI(spi,
                                NUM_PIXELS,
                                pixel_order=PIXEL_ORDER,
-                               auto_write=False)
+                               auto_write=False)  # NeoPixel-object voor het aansturen van de LED-strip
 
-GPIO.setmode(GPIO.BCM)
-button1 = GPIO.setup(21, GPIO.IN, pull_up_down=GPIO.PUD_UP) #button is aangesloten op pin 1 en is een pull_down weerstand
-button2 = GPIO.setup(20, GPIO.IN, pull_up_down=GPIO.PUD_UP) #button is aangesloten op pin 1 en is een pull_down weerstand
-button3 = GPIO.setup(27, GPIO.IN, pull_up_down=GPIO.PUD_UP) #button is aangesloten op pin 1 en is een pull_down weerstand
-button4 = GPIO.setup(17, GPIO.IN, pull_up_down=GPIO.PUD_UP) #button is aangesloten op pin 1 en is een pull_down weerstand
+GPIO.setmode(GPIO.BCM)  # GPIO-modus instellen op BCM (Broadcom)
+button1 = GPIO.setup(21, GPIO.IN, pull_up_down=GPIO.PUD_UP)  # Instellen van een GPIO-pin als input met pull-up weerstand
+button2 = GPIO.setup(20, GPIO.IN, pull_up_down=GPIO.PUD_UP)  # Instellen van een GPIO-pin als input met pull-up weerstand
+button3 = GPIO.setup(27, GPIO.IN, pull_up_down=GPIO.PUD_UP)  # Instellen van een GPIO-pin als input met pull-up weerstand
+button4 = GPIO.setup(17, GPIO.IN, pull_up_down=GPIO.PUD_UP)  # Instellen van een GPIO-pin als input met pull-up weerstand
 
-WIDTHM=600
-HEIGHTM=500
-surface = create_example_window('Pong keuzemenu', (WIDTHM, WIDTHM), flags = pygame.FULLSCREEN)
-col = (0, 0, 255)
-col1 = (0, 0, 255)
-snelheid = 3
-winscoremenu = 1
-winscore = 1
-kleurzin = "BLAUWE"
-kleurzin1 = "BLAUWE"
+WIDTHM = 800  # Breedte van het menuvenster
+HEIGHTM = 600  # Hoogte van het menuvenster
+surface = create_example_window('Pong keuzemenu', (WIDTHM, HEIGHTM), flags=pygame.FULLSCREEN)  # Maken van een fullscreen menuvenster met de titel 'Pong keuzemenu'
+col = (0, 0, 255)  # Kleur van een object (blauw)
+col1 = (0, 0, 255)  # Kleur van een ander object (blauw)
+snelheid = 3  # Snelheid van het spel
+winscoremenu = 1  # Winnaarscore voor het spel (menu)
+winscore = 1  # Winnaarscore voor het spel
+kleurzin = "BLAUWE"  # Zin om de kleur weer te geven (blauw)
+kleurzin1 = "BLAUWE"  # Zin om een andere kleur weer te geven (blauw)
+
 def set_difficulty(selected: Tuple, value: 1) -> None:
     """
-    Set the difficulty of the game.
+    stel de snelheid van het spel in.
     """
     print(f'Snelheid {selected} ({value})')
     global snelheid
@@ -57,13 +58,16 @@ def set_difficulty(selected: Tuple, value: 1) -> None:
     start_the_game(snelheid)
 
 def set_color(selected: Tuple, value: Any) -> None:
+    """
+    stel de kleur van het spel in.
+    """
     global col
     global colorbutton
     global kleurzin
     print(f'Kleur {selected} ({value})')
     col = selected
     print(value)
-    
+
     if value == 1:
         col = (0, 0, 255)
         colorbutton = 0x0000ff
@@ -80,119 +84,114 @@ def set_color(selected: Tuple, value: Any) -> None:
         col = (229, 190, 1)
         colorbutton = 0x737000
         kleurzin = "GELE"
-    
-    
-def set_color1(selected: Tuple, value: Any) -> None:
-    global col1
-    global colorbutton1
-    global kleurzin1
-    print(f'Kleur {selected} ({value})')
-    col1 = selected
-    print(value)
-    
-    if value == 1:
-        col1 = (0, 0, 255)
-        colorbutton1 = 0x0000ff
-        kleurzin1 = "BLAUWE"
-    if value == 2:
-        col1 = (255, 0, 0)
-        colorbutton1 = 0xff0000
-        kleurzin1 = "RODE"
-    if value == 3:
-        col1 = (0, 255, 0)
-        colorbutton1 = 0x008000
-        kleurzin1 = "GROENE"
-    if value == 4:
-        col1 = (229, 190, 1)
-        colorbutton1 = 0x737000
-        kleurzin1 = "GELE"
         
-
+def set_color1(selected: Tuple, value: Any) -> None:
+    global col1                   # Global variabele voor de kleur van speler 1
+    global colorbutton1           # Global variabele voor de kleur van de knop van speler 1
+    global kleurzin1              # Global variabele voor de zin die de kleur van speler 1 beschrijft
+    print(f'Kleur {selected} ({value})')     # Print de geselecteerde kleur en waarde
+    col1 = selected               # Wijs de geselecteerde kleur toe aan col1
+    print(value)                  # Print de waarde
     
+    if value == 1:                # Als de waarde 1 is
+        col1 = (0, 0, 255)        # Set de kleur van speler 1 naar blauw
+        colorbutton1 = 0x0000ff   # Set de kleur van de knop van speler 1 naar blauw
+        kleurzin1 = "BLAUWE"      # Set de zin die de kleur van speler 1 beschrijft naar "BLAUWE"
+    if value == 2:                # Als de waarde 2 is
+        col1 = (255, 0, 0)        # Set de kleur van speler 1 naar rood
+        colorbutton1 = 0xff0000   # Set de kleur van de knop van speler 1 naar rood
+        kleurzin1 = "RODE"        # Set de zin die de kleur van speler 1 beschrijft naar "RODE"
+    if value == 3:                # Als de waarde 3 is
+        col1 = (0, 255, 0)        # Set de kleur van speler 1 naar groen
+        colorbutton1 = 0x008000   # Set de kleur van de knop van speler 1 naar groen
+        kleurzin1 = "GROENE"      # Set de zin die de kleur van speler 1 beschrijft naar "GROENE"
+    if value == 4:                # Als de waarde 4 is
+        col1 = (229, 190, 1)      # Set de kleur van speler 1 naar geel
+        colorbutton1 = 0x737000   # Set de kleur van de knop van speler 1 naar geel
+        kleurzin1 = "GELE"        # Set de zin die de kleur van speler 1 beschrijft naar "GELE"
+
+
 def scorewinnen(selected: Tuple, value: 1) -> None:
-    global winscore
-    winscore = value
-    
+    global winscore               # Global variabele voor de winnende score
+    winscore = value              # Wijs de waarde toe aan winscore
+
+
 def start_the_game() -> None:
-    global col
-    global colorbutton
-    global col1
-    global colorbutton1
-    global snelheid
-    global winscore
-    pygame.init()
-    WIDTH=600
-    HEIGHT=500
-    WIN = pygame.display.set_mode((WIDTH, HEIGHT), pygame.FULLSCREEN) 
-    pygame.display.set_caption("Pong")
+    global col                    # Global variabele voor de kleur van speler 0
+    global colorbutton            # Global variabele voor de kleur van de knop van speler 0
+    global col1                   # Global variabele voor de kleur van speler 1
+    global colorbutton1           # Global variabele voor de kleur van de knop van speler 1
+    global snelheid               # Global variabele voor de snelheid van het spel
+    global winscore               # Global variabele voor de winnende score
+    pygame.init()                 # Initialiseer de Pygame module
+    WIDTH=800                     # Breedte van het scherm
+    HEIGHT=600                    # Hoogte van het scherm
+    WIN = pygame.display.set_mode((WIDTH, HEIGHT), pygame.FULLSCREEN)    # Maak een scherm met de opgegeven breedte en hoogte in de volledige schermmodus
+    pygame.display.set_caption("Pong")    # Stel de titel van het venster in als "Pong"
 
-    FPS = 60
+    FPS = 60                       # Frames per seconde voor de game loop
 
-    winner = False
+    winner = False                 # Variabele om bij te houden of er een winnaar is
 
-    WHITE = (255, 255, 255)
-    BLACK = (0, 0, 0)
-    ROOD = (255, 0, 0)
-    GROEN = (0, 255, 0)
-    BLAUW = (0, 0, 255)
-    GEEL = (229, 190, 1)
+    WHITE = (255, 255, 255)        # Kleur wit
+    BLACK = (0, 0, 0)              # Kleur zwart
+    ROOD = (255, 0, 0)             # Kleur rood
+    GROEN = (0, 255, 0)            # Kleur groen
+    BLAUW = (0, 0, 255)            # Kleur blauw
+    GEEL = (229, 190, 1)           # Kleur geel
 
-    kleur1 = col
-    kleur2 = col1
-    print(col)
-    
-    lijst = [3,2,1]
+    kleur1 = col                   # Variabele voor de kleur van speler 0
+    kleur2 = col1                  # Variabele voor de kleur van speler 1
+    print(col)                     # Print de waarde van col
 
-    font = pygame.font.SysFont('Consolas', 30)
-    fontcount = pygame.font.SysFont('Consolas', 300)
-    count = fontcount.render(str( ), True, BLACK)
-    count_pos =count.get_rect()
-    count_pos.center = ((WIDTH//2)-75, HEIGHT//2)
+    lijst = [3,2,1]                # Lijst met getallen
 
-    PADDLE_WIDTH, PADDLE_HEIGHT = 7, 60
-    BALL_RADIUS = 8
+    font = pygame.font.SysFont('Consolas', 30)              # Font voor tekst met grootte 30
+    fontcount = pygame.font.SysFont('Consolas', 300)        # Font voor grote tekst met grootte 300
+    count = fontcount.render(str( ), True, BLACK)           # Render een lege string met het font en kleur zwart
+    count_pos = count.get_rect()                            # Haal het rechthoekige oppervlak op van de gerenderde tekst
+    count_pos.center = ((WIDTH//2)-75, HEIGHT//2)           # Zet het midden van de rechthoekige oppervlak in het midden van het scherm
 
-    SCORE_FONT = pygame.font.SysFont("comicsans", 65)
-    SCORE_FONT1 = pygame.font.SysFont("comicsans", 65)
-    SCORE_FONT2 = pygame.font.SysFont("comicsans", 35)
-    
-    WINNING_SCORE = winscore
+    PADDLE_WIDTH, PADDLE_HEIGHT = 7, 80                     # Breedte en hoogte van de paddles
+    BALL_RADIUS = 8                                          # Straal van de bal
+
+    SCORE_FONT = pygame.font.SysFont("comicsans", 65)        # Font voor score met grootte 65
+    SCORE_FONT1 = pygame.font.SysFont("comicsans", 65)       # Font voor score van speler 0 met grootte 65
+    SCORE_FONT2 = pygame.font.SysFont("comicsans", 35)       # Font voor score van speler 1 met grootte 35
+
+    WINNING_SCORE = winscore     # Winnende score voor het spel               # Global variabele voor de snelheid van het spel
     def text_objects(msg, smallText):
+        # Functie om tekstoppervlak en rechthoek te maken voor gegeven bericht en lettertype
         textSurface = font.render(msg, True, GROEN)
         return textSurface, textSurface.get_rect()
 
     def licht_uit():
+        # Functie om het licht uit te schakelen
         kleuropnieuw = 0x000000
         for i in range(32):
             pixels[i] = kleuropnieuw
             pixels.show()
-        for i in range(32,64):
+        for i in range(32, 64):
             pixels[i] = kleuropnieuw
             pixels.show()
-            
-            
-            
-    
+
     try:
         for i in range(32):
             pixels[i] = colorbutton
             pixels.show()
-        for i in range(32,64):
+        for i in range(32, 64):
             pixels[i] = colorbutton1
             pixels.show()
     except KeyboardInterrupt:
         pixels.fill()
 
-    
-
-
-
-    
     class Paddle:
+    # Klasse voor een 'paddle'
         COLOR = kleur1
         VEL = snelheid
 
         def __init__(self, x, y, width, height, kleur):
+            # Initialisatie van de 'paddle' met positie, afmetingen en kleur
             self.x = self.original_x = x
             self.y = self.original_y = y
             self.width = width
@@ -200,45 +199,48 @@ def start_the_game() -> None:
             self.kleur = kleur
 
         def draw(self, win):
-            pygame.draw.rect(win, self.kleur, (self.x, self.y, self.width, self.height),0 )
+            # Methode om de 'paddle' te tekenen op het scherm
+            pygame.draw.rect(win, self.kleur, (self.x, self.y, self.width, self.height), 0)
 
         def move(self, up=True):
+            # Methode om de 'paddle' te verplaatsen (omhoog of omlaag)
             if up:
                 self.y -= self.VEL
             else:
                 self.y += self.VEL
 
         def reset(self):
+            # Methode om de positie van de 'paddle' te resetten naar de oorspronkelijke positie
             self.x = self.original_x
             self.y = self.original_y
-
-
-
+            
     class Ball:
-        MAX_VEL = snelheid
-        COLOR = kleur1
-        
-        
+        MAX_VEL = snelheid  # Maximale snelheid van de bal
+        COLOR = kleur1    # Kleur van de bal
+
         def __init__(self, x, y, radius):
             self.x = self.original_x = x
             self.y = self.original_y = y
             self.radius = radius
-            self.x_vel = self.MAX_VEL
-            self.y_vel = 0
+            self.x_vel = self.MAX_VEL  # Horizontale snelheid van de bal
+            self.y_vel = 0             # Verticale snelheid van de bal
 
         def draw(self, win):
-            pygame.draw.circle(win, BLACK, (int(self.x),int(self.y)), self.radius)
+            # Tekent de bal op het scherm
+            pygame.draw.circle(win, BLACK, (int(self.x), int(self.y)), self.radius)
 
         def move(self):
+            # Beweegt de bal door de positie bij te werken
             self.x += self.x_vel
             self.y += self.y_vel
 
         def reset(self):
+            # Reset de positie en snelheid van de bal naar de oorspronkelijke waarden
             self.x = self.original_x
             self.y = self.original_y
             self.y_vel = 0
             self.x_vel *= -1
-        
+
     def draw(win, paddles, ball, left_score, right_score, dimknoppauze, WIN):
         win.fill(WHITE)
 
@@ -253,18 +255,18 @@ def start_the_game() -> None:
         for i in range(10, HEIGHT, HEIGHT//20):
             if i % 2 == 1:
                 continue
-            pygame.draw.rect(win, BLACK, (WIDTH//2 - 5, i, 10, HEIGHT//20))
+            pygame.draw.line(win, BLACK, (WIDTH//2, i), (WIDTH//2, i + HEIGHT//20), 2)
 
         ball.draw(win)
-        pygame.draw.rect(WIN,BLACK,dimknoppauze)
+        pygame.draw.rect(WIN, BLACK, dimknoppauze)
         tekst = font.render("PAUZE", True, (255, 255, 255))  # Maak de tekst
-        scherm_midden = (WIDTH // 2, (dimknoppauze[1] + (dimknoppauze[3] // 2)))
-        tekst_midden = (tekst.get_width() // 2, tekst.get_height() // 2)
+        scherm_midden = (WIDTH//2, dimknoppauze[1] + dimknoppauze[3]//2)
+        tekst_midden = (tekst.get_width()//2, tekst.get_height()//2)
         WIN.blit(tekst, (scherm_midden[0] - tekst_midden[0], scherm_midden[1] - tekst_midden[1]))
         pygame.display.update()
 
-
     def handle_collision(ball, left_paddle, right_paddle):
+        # Controleer en verwerk botsingen van de bal met de randen en de peddels
         if ball.y + ball.radius >= HEIGHT:
             ball.y_vel *= -1
         elif ball.y - ball.radius <= 0:
@@ -291,26 +293,64 @@ def start_the_game() -> None:
                     reduction_factor = (right_paddle.height / 2) / ball.MAX_VEL
                     y_vel = difference_in_y / reduction_factor
                     ball.y_vel = -1 * y_vel
+    def handle_collision(ball, left_paddle, right_paddle):
+        # Controleer en verwerk botsingen van de bal met de randen en de peddels
+        if ball.y + ball.radius >= HEIGHT:
+            ball.y_vel *= -1
+        elif ball.y - ball.radius <= 0:
+            ball.y_vel *= -1
 
+        if ball.x_vel < 0:
+            if ball.y >= left_paddle.y and ball.y <= left_paddle.y + left_paddle.height:
+                if ball.x - ball.radius <= left_paddle.x + left_paddle.width:
+                    ball.x_vel *= -1
 
+                    middle_y = left_paddle.y + left_paddle.height / 2
+                    difference_in_y = middle_y - ball.y
+                    reduction_factor = (left_paddle.height / 2) / ball.MAX_VEL
+                    y_vel = difference_in_y / reduction_factor
+                    ball.y_vel = -1 * y_vel
+
+        else:
+            if ball.y >= right_paddle.y and ball.y <= right_paddle.y + right_paddle.height:
+                if ball.x + ball.radius >= right_paddle.x:
+                    ball.x_vel *= -1
+
+                    middle_y = right_paddle.y + right_paddle.height / 2
+                    difference_in_y = middle_y - ball.y
+                    reduction_factor = (right_paddle.height / 2) / ball.MAX_VEL
+                    y_vel = difference_in_y / reduction_factor
+                    ball.y_vel = -1 * y_vel
     def handle_paddle_movement(keys, left_paddle, right_paddle):
+        # Beweeg de linker paddle omhoog als de 's' toets wordt ingedrukt en de paddle niet buiten het scherm gaat
         if keys[pygame.K_s] and left_paddle.y - left_paddle.VEL >= 0:
             left_paddle.move(up=True)
+            
+        # Beweeg de linker paddle omlaag als de 'w' toets wordt ingedrukt en de paddle niet buiten het scherm gaat
         if keys[pygame.K_w] and left_paddle.y + left_paddle.VEL + left_paddle.height <= HEIGHT:
             left_paddle.move(up=False)
-            
-        if GPIO.input(21)==False and left_paddle.y - left_paddle.VEL >= 0:
+        
+        # Beweeg de linker paddle omhoog als GPIO-pin 21 een lage waarde heeft en de paddle niet buiten het scherm gaat
+        if GPIO.input(21) == False and left_paddle.y - left_paddle.VEL >= 0:
             left_paddle.move(up=True)
-        if GPIO.input(20)==False and left_paddle.y + left_paddle.VEL + left_paddle.height <= HEIGHT:
+        
+        # Beweeg de linker paddle omlaag als GPIO-pin 20 een lage waarde heeft en de paddle niet buiten het scherm gaat
+        if GPIO.input(20) == False and left_paddle.y + left_paddle.VEL + left_paddle.height <= HEIGHT:
             left_paddle.move(up=False)
-
-        if GPIO.input(27)==False and right_paddle.y - right_paddle.VEL >= 0:
+        
+        # Beweeg de rechter paddle omhoog als GPIO-pin 27 een lage waarde heeft en de paddle niet buiten het scherm gaat
+        if GPIO.input(27) == False and right_paddle.y - right_paddle.VEL >= 0:
             right_paddle.move(up=True)
-        if GPIO.input(17)==False and right_paddle.y + right_paddle.VEL + right_paddle.height <= HEIGHT:
+        
+        # Beweeg de rechter paddle omlaag als GPIO-pin 17 een lage waarde heeft en de paddle niet buiten het scherm gaat
+        if GPIO.input(17) == False and right_paddle.y + right_paddle.VEL + right_paddle.height <= HEIGHT:
             right_paddle.move(up=False)
-            
+        
+        # Beweeg de rechter paddle omhoog als de 'pijltje omhoog' toets wordt ingedrukt en de paddle niet buiten het scherm gaat
         if keys[pygame.K_UP] and right_paddle.y - right_paddle.VEL >= 0:
             right_paddle.move(up=True)
+        
+        # Beweeg de rechter paddle omlaag als de 'pijltje omlaag' toets wordt ingedrukt en de paddle niet buiten het scherm gaat
         if keys[pygame.K_DOWN] and right_paddle.y + right_paddle.VEL + right_paddle.height <= HEIGHT:
             right_paddle.move(up=False)
 
@@ -318,53 +358,50 @@ def start_the_game() -> None:
         keys = pygame.key.get_pressed()
         for i in lijst:
             for event in pygame.event.get():
-                    if event.type == pygame.KEYDOWN:
-                        if event.key == pygame.K_q:
-                            licht_uit()
-                            exit()
+                # Controleer of de 'q' toets is ingedrukt om het spel af te sluiten
+                if event.type == pygame.KEYDOWN:
+                    if event.key == pygame.K_q:
+                        licht_uit()
+                        exit()
             count = fontcount.render(str(i), True, BLACK)
             WIN.fill(WHITE)
             WIN.blit(count, count_pos)
             pygame.display.update()
             time.sleep(1)
         return True
-            
-    
-    
+
     def pauzescherm():
         paused = True
         while paused:
-            dimknopresume = (225,350,150,50)
-            dimknopquit = (225,275,150,50)
-            dimknopherstart = (225,200,150,50)
+            dimknopresume = (WIDTH //2 - 75, 350, 150, 50)
+            dimknopquit = (WIDTH //2 - 75, 275, 150, 50)
+            dimknopherstart = (WIDTH //2 - 75, 200, 150, 50)
             for event in pygame.event.get():
-                if pygame.mouse.get_pressed() == (1,0,0):
+                if pygame.mouse.get_pressed() == (1, 0, 0):
                     pos = pygame.mouse.get_pos()
+                    # Hervat het spel als er op de 'HERVAT' knop wordt geklikt
                     if dimknopresume[0] < pos[0] < (dimknopresume[0] + dimknopresume[2]):
                         if dimknopresume[1] < pos[1] < (dimknopresume[1] + dimknopresume[3]):
                             paused = False
-                if pygame.mouse.get_pressed() == (1,0,0):
-                    pos = pygame.mouse.get_pos()
+                    # Sluit het spel af als er op de 'STOPPEN' knop wordt geklikt
                     if dimknopquit[0] < pos[0] < (dimknopquit[0] + dimknopquit[2]):
                         if dimknopquit[1] < pos[1] < (dimknopquit[1] + dimknopquit[3]):
                             licht_uit()
                             exit()
-                if pygame.mouse.get_pressed() == (1,0,0):
-                    pos = pygame.mouse.get_pos()
+                    # Ga terug naar het startscherm als er op de 'OPNIEUW' knop wordt geklikt
                     if dimknopherstart[0] < pos[0] < (dimknopherstart[0] + dimknopherstart[2]):
                         if dimknopherstart[1] < pos[1] < (dimknopherstart[1] + dimknopherstart[3]):
                             licht_uit()
                             menu.mainloop(surface)
-                
-           
+    
             WIN.fill((255, 255, 255))  # Maak het scherm wit
             tekst = font.render("PAUZE", True, (0, 0, 0))  # Maak de tekst
             scherm_midden = (WIDTH // 2, 100)
             tekst_midden = (tekst.get_width() // 2, tekst.get_height() // 2)
             WIN.blit(tekst, (scherm_midden[0] - tekst_midden[0], scherm_midden[1] - tekst_midden[1]))
-            pygame.draw.rect(WIN,BLACK,dimknopresume)
-            pygame.draw.rect(WIN,BLACK,dimknopquit)
-            pygame.draw.rect(WIN,BLACK,dimknopherstart)
+            pygame.draw.rect(WIN, BLACK, dimknopresume)
+            pygame.draw.rect(WIN, BLACK, dimknopquit)
+            pygame.draw.rect(WIN, BLACK, dimknopherstart)
             
             tekstresume = font.render("HERVAT", True, (255, 255, 255))  # Maak de tekst
             scherm_midden1 = (WIDTH // 2, (dimknopresume[1] + (dimknopresume[3] // 2)))
@@ -382,24 +419,25 @@ def start_the_game() -> None:
             WIN.blit(tekstquit, (scherm_midden2[0] - tekst_midden2[0], scherm_midden2[1] - tekst_midden2[1]))
             pygame.display.update()
         return True
-
+        # Initialisatie van het spel en instellingen
     def main():
-        print(f"de snelhied is {snelheid}")
-        run = True
-        clock = pygame.time.Clock()
-        
-        left_paddle = Paddle(10, HEIGHT//2 - PADDLE_HEIGHT //
-                            2, PADDLE_WIDTH, PADDLE_HEIGHT, col)
-        right_paddle = Paddle(WIDTH - 10 - PADDLE_WIDTH, HEIGHT //
-                            2 - PADDLE_HEIGHT//2, PADDLE_WIDTH, PADDLE_HEIGHT, col1)
+        # Initialisatie van variabelen en objecten
+        print(f"de snelheid is {snelheid}")  # Afdrukken van de snelheid
+        run = True  # Variabele om de hoofdlus van het spel te controleren
+        clock = pygame.time.Clock()  # Klokobject om de framesnelheid te beheren
+
+        # Initialisatie van de spelobjecten
+        left_paddle = Paddle(10, HEIGHT//2 - PADDLE_HEIGHT // 2, PADDLE_WIDTH, PADDLE_HEIGHT, col)
+        right_paddle = Paddle(WIDTH - 10 - PADDLE_WIDTH, HEIGHT // 2 - PADDLE_HEIGHT // 2, PADDLE_WIDTH, PADDLE_HEIGHT, col1)
         ball = Ball(WIDTH // 2, HEIGHT // 2, BALL_RADIUS)
 
-            
-
+        # Initialisatie van scores en andere variabelen
         left_score = 0
         right_score = 0
         tijd = time.time()
         winner = False
+
+        # Lus om de countdown te tonen voordat het spel begint
         for i in lijst:
             count = fontcount.render(str(i), True, BLACK)
             WIN.fill(WHITE)
@@ -409,33 +447,31 @@ def start_the_game() -> None:
                 for event in pygame.event.get():
                     if event.type == pygame.KEYDOWN:
                         if event.key == pygame.K_q:
-                            run = False
+                            run = False  # Het spel wordt gestopt als de 'q'-toets wordt ingedrukt
             if run == False:
                 break
-                            
-        
+
             tijd = time.time()
 
+    # Hoofdlus van het spel
         while run:
-            
-            dimknoppauze = (250,0,100,50)
-            if pygame.mouse.get_pressed() == (1,0,0):
+            # Pauzemenu weergeven als de speler op de pauzeknop klikt
+            dimknoppauze = (WIDTH // 2 - 50, 0, 100, 50)
+            if pygame.mouse.get_pressed() == (1, 0, 0):
                 pos = pygame.mouse.get_pos()
                 if dimknoppauze[0] < pos[0] < (dimknoppauze[0] + dimknoppauze[2]):
                     if dimknoppauze[1] < pos[1] < (dimknoppauze[1] + dimknoppauze[3]):
-                         pauzescherm()  
+                        pauzescherm()  # Functie om het pauzescherm weer te geven
             pygame.display.update()
             interval = clock.tick(FPS)
 
-            
+            # Het spelvenster bijwerken met de huidige staat van het spel
             draw(WIN, [left_paddle, right_paddle], ball, left_score, right_score, dimknoppauze, WIN)
 
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
-
-                    run = False
+                    run = False  # Het spel wordt gestopt als het venster wordt gesloten
                     break
-                
 
             keys = pygame.key.get_pressed()
             handle_paddle_movement(keys, left_paddle, right_paddle)
@@ -443,90 +479,85 @@ def start_the_game() -> None:
             ball.move()
             handle_collision(ball, left_paddle, right_paddle)
 
-            
-
-            won = False     
+            won = False
             if keys[pygame.K_q]:
                 winner = False
-                run = False 
-                
+                run = False  # Het spel wordt gestopt als de 'q'-toets wordt ingedrukt
+
+            # Controleren op score en winnaar bepalen
             if ball.x < 0:
                 right_score += 1
                 if right_score >= WINNING_SCORE:
                     won = True
                     winner = True
-                    run = False
+                    run = False  # Het spel wordt gestopt als de rechter speler wint
                 else:
                     left_paddle.reset()
                     right_paddle.reset()
                     countdown(WIN)
                     ball.reset()
-                
-                
+
             elif ball.x > WIDTH:
                 left_score += 1
                 if left_score >= WINNING_SCORE:
                     won = True
                     winner = True
-                    run = False
+                    run = False  # Het spel wordt gestopt als de linker speler wint
                 else:
                     left_paddle.reset()
                     right_paddle.reset()
                     countdown(WIN)
                     ball.reset()
-                
-        
-        while winner==True:
+
+        # Weergeven van het winnaarscherm
+        while winner == True:
             clock.tick(FPS)
-            
+
             if left_score >= WINNING_SCORE:
                 win_text = f'De {kleurzin} speler heeft gewonnen'
-                    
                 text = SCORE_FONT2.render(win_text, 1, kleur1)
-            elif right_score >= WINNING_SCORE:  
+            elif right_score >= WINNING_SCORE:
                 win_text = f'De {kleurzin1} speler heeft gewonnen'
-                    
                 text = SCORE_FONT2.render(win_text, 1, kleur2)
-                
+
             WIN.fill(WHITE)
-            WIN.blit(text, (WIDTH//4 - text.get_width() //
-                            8, HEIGHT//3 - text.get_height()//8))
-         
-            dimknopherstart = (250,275,100,50)
-            dimknopquit = (250,350,100,50)
-            pygame.draw.rect(WIN,BLACK,dimknopherstart)
-            pygame.draw.rect(WIN,BLACK,dimknopquit)
+            WIN.blit(text, (WIDTH // 2 - text.get_width() // 2, HEIGHT // 3 - text.get_height() // 8))
+
+            dimknopherstart = (WIDTH // 2 - 75, 275, 150, 50)
+            dimknopquit = (WIDTH // 2 - 75, 350, 150, 50)
+            pygame.draw.rect(WIN, BLACK, dimknopherstart)
+            pygame.draw.rect(WIN, BLACK, dimknopquit)
             for event in pygame.event.get():
-                if pygame.mouse.get_pressed() == (1,0,0):
+                if pygame.mouse.get_pressed() == (1, 0, 0):
                     pos = pygame.mouse.get_pos()
                     if dimknopherstart[0] < pos[0] < (dimknopherstart[0] + dimknopherstart[2]):
                         if dimknopherstart[1] < pos[1] < (dimknopherstart[1] + dimknopherstart[3]):
                             licht_uit()
-                            menu.mainloop(surface)
-                if pygame.mouse.get_pressed() == (1,0,0):
+                            menu.mainloop(surface)  # Terugkeren naar het hoofdmenu als op de herstartknop wordt geklikt
+                if pygame.mouse.get_pressed() == (1, 0, 0):
                     pos = pygame.mouse.get_pos()
                     if dimknopquit[0] < pos[0] < (dimknopquit[0] + dimknopquit[2]):
                         if dimknopquit[1] < pos[1] < (dimknopquit[1] + dimknopquit[3]):
                             licht_uit()
-                            exit()
-                            
-            tekstherstart = font.render("OPNIEUW", True, (255, 255, 255))  # Maak de tekst
+                            exit()  # Het spel wordt afgesloten als op de stopknop wordt geklikt
+
+            tekstherstart = font.render("OPNIEUW", True, (255, 255, 255))
             scherm_midden3 = (WIDTH // 2, (dimknopherstart[1] + (dimknopherstart[3] // 2)))
             tekst_midden3 = (tekstherstart.get_width() // 2, tekstherstart.get_height() // 2)
             WIN.blit(tekstherstart, (scherm_midden3[0] - tekst_midden3[0], scherm_midden3[1] - tekst_midden3[1]))
-            tekstquit = font.render("STOPPEN", True, (255, 255, 255))  # Maak de tekst
+            tekstquit = font.render("STOPPEN", True, (255, 255, 255))
             scherm_midden2 = (WIDTH // 2, (dimknopquit[1] + (dimknopquit[3] // 2)))
             tekst_midden2 = (tekstquit.get_width() // 2, tekstquit.get_height() // 2)
             WIN.blit(tekstquit, (scherm_midden2[0] - tekst_midden2[0], scherm_midden2[1] - tekst_midden2[1]))
             pygame.display.update()
+
         licht_uit()
-        exit()
-        
+        exit()  # Het spel wordt afgesloten na het tonen van het winnaarscherm
     if __name__ == '__main__':
         main()
-        
-menu = pygame_menu.Menu(
 
+        # Het hoofdmenu van het spel
+menu = pygame_menu.Menu(
     height=HEIGHTM,
     theme=pygame_menu.themes.THEME_DARK,
     title='Welkom',
@@ -534,17 +565,13 @@ menu = pygame_menu.Menu(
 )
 
 menu.add.selector('Snelheid: ', [('Traag', 1), ('Normaal', 2), ('Turbo', 3)], onchange=set_difficulty)
-menu.add.selector('KleurLinks: ', [('BLAUW', 1), ('ROOD', 2), ('GROEN', 3), ('GEEL', 4)], onchange=set_color)
-menu.add.selector('KleurRechts: ', [('BLAUW', 1), ('ROOD', 2), ('GROEN', 3), ('GEEL', 4)], onchange=set_color1)
-menu.add.selector('WinScore: ', [('1', 1), ('2', 2), ('3', 3), ('4', 4), ('5', 5), ('6', 6), ('7', 7),('8', 8),('9', 9)
-                                 ,('10', 10)], onchange=scorewinnen)
+menu.add.selector('Speler1 (LINKS): ', [('BLAUW', 1), ('ROOD', 2), ('GROEN', 3), ('GEEL', 4)], onchange=set_color)
+menu.add.selector('Speler2 (RECHTS): ', [('BLAUW', 1), ('ROOD', 2), ('GROEN', 3), ('GEEL', 4)], onchange=set_color1)
+menu.add.selector('WinScore: ', [('1', 1), ('2', 2), ('3', 3), ('4', 4), ('5', 5), ('6', 6), ('7', 7), ('8', 8), ('9', 9), ('10', 10)],
+                  onchange=scorewinnen)
 menu.add.button('Play', (start_the_game))
 menu.add.button('Quit', pygame_menu.events.EXIT)
 
+# Het spel wordt gestart door het hoofdmenu te tonen
 if __name__ == '__main__':
     menu.mainloop(surface)
-    
-
-    
-    
-
